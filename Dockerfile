@@ -16,7 +16,9 @@ RUN if [ "$TARGETPLATFORM" = "linux/amd64" ]; then \
 
 FROM ghcr.io/phusion/baseimage:jammy-1.0.2
 ARG TARGETPLATFORM
-COPY --from=builder /app/main* /home/
+
+WORKDIR /home
+COPY --from=builder /app/main .
 
 # 根据 TARGETPLATFORM 环境变量选择不同的二进制文件
-CMD if [ "$TARGETPLATFORM" = "linux/amd64" ]; then /home/main-x64; else /home/main-arm64; fi
+ENTRYPOINT [ "./main" ] 
